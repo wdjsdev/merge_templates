@@ -1,12 +1,9 @@
 /*
-
 Script Name: Merge Templates
 Author: William Dowling
 Build Date: 20 September, 2017
 Description: Merge two mockups together while preserving correct
-			layer structure for other scripts
-	
-	
+			layer structure for other scripts	
 */
 
 function container()
@@ -23,38 +20,21 @@ function container()
 	/*****************************************************************************/
 	//=================================  Logic  =================================//
 	
-	function getMaster(openDocs)
+	//import the necessary components
+	var devPath = "~/Desktop/automation/merge_templates/components";
+	var prodPath = "/Volumes/Customization/Library/Scripts/Script Resources/components/merge_templates";
+	var comps = includeComponents(devPath,prodPath);
+	if(comps)
 	{
-		log.h("getMaster()")
-		var result;
-		var curName;
-		var btns = [];
-
-		/* beautify ignore:start */
-		var w = new Window("dialog", "Select the master file.");
-			var topTxt = w.add("statictext", undefined, "Select the master file.");
-			var btnGroup = w.add("group");
-				btnGroup.orientation = "column";
-				for(var x=1;x<docLength;x++)
-				{
-					curName = openDocs[x].name;
-					btns[x] = btnGroup.add("button", undefined, curName);
-					btns[x].onClick = function()
-					{
-						result = openDocs[curName];
-						log.l("User selected: " + curName);
-						w.close();
-					}
-				}
-				var cancel = btnGroup.add("button", undefined, "Cancel");
-					cancel.onClick = function()
-					{
-						w.close();
-					}
-
-		w.show();
-		/* beautify ignore:end */
-		return result;
+		var compLen = comps.length;
+		for(var c=0;c<compLen;c++)
+		{
+			eval("#include \"" + comps[c] + "\"");
+		}
+	}
+	else
+	{
+		valid = false;
 	}
 
 	//=================================  /Logic  =================================//
@@ -66,12 +46,13 @@ function container()
 	/*****************************************************************************/
 	//=================================  Data  =================================//
 	
-	var docRef = app.activeDocument,
-		layers = docRef.layers,
-		aB = docRef.artboards,
-		swatches = docRef.swatches,
+	var sourceDoc = app.activeDocument,
+		sourceLayers = sourceDoc.layers,
+		sourceAb = sourceDoc.artboards,
+		
 		openDocs = app.documents,
-		docLength = openDocs.length;
+		docLength = openDocs.length,
+		master,masterLayers,masterArtboards;
 
 
 	//=================================  /Data  =================================//
@@ -91,12 +72,37 @@ function container()
 
 	if(valid)
 	{
-		if(!getMaster(openDocs))
+		master = getMaster(openDocs);
+		if(!master)
 		{
 			valid = false;
 			log.l("User cancelled dialog. Exiting script.");
 		}
+		else
+		{
+			masterLayers = master.layers;
+			masterArtboards = master.artboards;
+		}
 	}
+
+	if(valid)
+	{
+		//add container to sourceDoc if necessary
+		if(!isTemplate(sourceDoc))
+		{
+			valid = makeContainer(sourceDoc,sourceLayers);
+		}
+
+		//add container to master file if necessary
+		if(valid && !isTemplate(master))
+		{	
+			master.activate();
+			valid = makeContainer(master,masterLayers);
+			sourceDoc.activate();
+		}
+	}
+
+
 
 
 	//=================================  /Procedure  =================================//
