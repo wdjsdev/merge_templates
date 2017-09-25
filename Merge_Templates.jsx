@@ -53,6 +53,8 @@ function container()
 		docLength = openDocs.length,
 		master, masterLayers, masterArtboards;
 
+		var newArtboardBounds = {};
+
 
 	//=================================  /Data  =================================//
 	/*****************************************************************************/
@@ -95,21 +97,27 @@ function container()
 		valid = unlockDoc(master);
 	}
 
-	if (valid)
+	if (valid && !isTemplate(sourceDoc))
 	{
 		sourceDoc.activate();
 		//add container to sourceDoc if necessary
-		if (!isTemplate(sourceDoc))
-		{
-			valid = makeContainer(sourceDoc);
-		}
+		valid = makeContainer(sourceDoc);
+	}
 
+	if (valid && !isTemplate(master))
+	{
+		master.activate();
 		//add container to master file if necessary
-		if (valid && !isTemplate(master))
+		valid = makeContainer(master);
+		sourceDoc.activate();
+	}
+
+	if(valid)
+	{
+		newArtboardBounds = getArtboardBounds(sourceDoc);
+		if(!newArtboardBounds)
 		{
-			master.activate();
-			valid = makeContainer(master);
-			sourceDoc.activate();
+			valid = false;
 		}
 	}
 

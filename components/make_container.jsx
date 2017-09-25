@@ -12,6 +12,7 @@
 */
 function makeContainer(doc)
 {
+	log.h("makeContainer(" + doc.name + ")");
 	var result = true;
 	var layers = doc.layers,layName;
 
@@ -20,17 +21,20 @@ function makeContainer(doc)
 		var topTxt1 = w.add("statictext", undefined, "For the document: " + doc.name + "...")
 		var topTxt2 = w.add("statictext", undefined, "Please enter the the garment code and style number.");
 		var input = w.add("edittext", undefined, "Example: FD-136W_023");
+			input.active = true;
 		var btnGroup = w.add("group");
 			var submit = btnGroup.add("button", undefined, "Submit");
 				submit.onClick = function()
 				{
 					layName = input.text;
+					log.l("User entered " + layName);
 					w.close();
 				}
 			var cancel = btnGroup.add("button", undefined, "Cancel");
 				cancel.onClick = function()
 				{
 					result = false;
+					log.l("User cancelled dialog.");
 					w.close();
 				}
 	w.show();
@@ -42,6 +46,7 @@ function makeContainer(doc)
 		{
 			var container = layers.add();
 			container.name = layName;
+			log.l("Successfully added a container layer.")
 		}
 		catch (e)
 		{
@@ -62,7 +67,9 @@ function makeContainer(doc)
 				layers[x].locked = false;
 				layers[x].visible = true;
 				layers[x].moveToBeginning(container);
+				log.l("Moved layer: " + layers[x].name + " to container layer.");
 			}
+			log.l("Successfully moved all layers to container layer.");
 		}
 		catch (e)
 		{
@@ -72,5 +79,6 @@ function makeContainer(doc)
 		}
 	}
 
+	log.l("makeContainer result = " + result);
 	return result;
 }

@@ -35,6 +35,8 @@ function getMaster(openDocs)
 
 	w.show();
 	/* beautify ignore:end */
+
+	log.l("getMaster result = " + result);
 	return result;
 
 	function makeButton(doc)

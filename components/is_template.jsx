@@ -44,6 +44,7 @@ function isTemplate(doc)
 		log.l("Failed to find the layer: " + curName + ". Treating " + doc.name + " as a non-converted template.");
 	}
 
+	log.l("isTemplate result = " + result);
 	return result;
 
 }
