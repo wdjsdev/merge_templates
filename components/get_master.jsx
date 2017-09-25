@@ -28,6 +28,8 @@ function getMaster(openDocs)
 			var cancel = btnGroup.add("button", undefined, "Cancel");
 				cancel.onClick = function()
 				{
+					log.l("User cancelled getMaster dialog.")
+					result = false;
 					w.close();
 				}
 
@@ -43,7 +45,7 @@ function getMaster(openDocs)
 		thisButton.onClick = function()
 		{
 			result = doc;
-			log.l("User selected: " + curName);
+			log.l("::User selected: " + curName);
 			w.close();
 		}
 	}

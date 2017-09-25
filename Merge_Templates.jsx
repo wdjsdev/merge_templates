@@ -19,15 +19,15 @@ function container()
 
 	/*****************************************************************************/
 	//=================================  Logic  =================================//
-	
+
 	//import the necessary components
 	var devPath = "~/Desktop/automation/merge_templates/components";
 	var prodPath = "/Volumes/Customization/Library/Scripts/Script Resources/components/merge_templates";
-	var comps = includeComponents(devPath,prodPath);
-	if(comps)
+	var comps = includeComponents(devPath, prodPath);
+	if (comps)
 	{
 		var compLen = comps.length;
-		for(var c=0;c<compLen;c++)
+		for (var c = 0; c < compLen; c++)
 		{
 			eval("#include \"" + comps[c] + "\"");
 		}
@@ -42,17 +42,16 @@ function container()
 
 
 
-
 	/*****************************************************************************/
 	//=================================  Data  =================================//
-	
+
 	var sourceDoc = app.activeDocument,
 		sourceLayers = sourceDoc.layers,
 		sourceAb = sourceDoc.artboards,
-		
+
 		openDocs = app.documents,
 		docLength = openDocs.length,
-		master,masterLayers,masterArtboards;
+		master, masterLayers, masterArtboards;
 
 
 	//=================================  /Data  =================================//
@@ -61,22 +60,21 @@ function container()
 
 	/*****************************************************************************/
 	//=================================  Procedure  =================================//
-	
-	//verify the existence of a document
-	if(valid && docLength < 2)
+
+	//verify the existence of necessary documents
+	if (valid && docLength < 2)
 	{
 		errorList.push("You must have at least 2 documents open.");
 		log.e("Not enough documents open.::There were: " + app.documents.length + " documents open.");
 		valid = false;
 	}
 
-	if(valid)
+	if (valid)
 	{
 		master = getMaster(openDocs);
-		if(!master)
+		if (!master)
 		{
 			valid = false;
-			log.l("User cancelled dialog. Exiting script.");
 		}
 		else
 		{
@@ -87,28 +85,39 @@ function container()
 
 	if(valid)
 	{
+		sourceDoc.activate();
+		valid = unlockDoc(sourceDoc);
+	}
+
+	if(valid)
+	{
+		master.activate();
+		valid = unlockDoc(master);
+	}
+
+	if (valid)
+	{
+		sourceDoc.activate();
 		//add container to sourceDoc if necessary
-		if(!isTemplate(sourceDoc))
+		if (!isTemplate(sourceDoc))
 		{
-			valid = makeContainer(sourceDoc,sourceLayers);
+			valid = makeContainer(sourceDoc);
 		}
 
 		//add container to master file if necessary
-		if(valid && !isTemplate(master))
-		{	
+		if (valid && !isTemplate(master))
+		{
 			master.activate();
-			valid = makeContainer(master,masterLayers);
+			valid = makeContainer(master);
 			sourceDoc.activate();
 		}
 	}
 
 
-
-
 	//=================================  /Procedure  =================================//
 	/*****************************************************************************/
 
-	if(errorList.length>0)
+	if (errorList.length > 0)
 	{
 		sendErrors(errorList);
 	}

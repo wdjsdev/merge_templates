@@ -32,7 +32,7 @@ function isTemplate(doc)
 			{
 				curName = subLayers[x];
 				subLay = curLay.layers[curName];
-				log.l("Successfully found the " + curName + " layer.");
+				log.l("Successfully found the layer: " + curName);
 			}
 			log.l("All the necessary layers are there. This looks like a proper converted template.");
 			result = true;
@@ -41,7 +41,7 @@ function isTemplate(doc)
 	catch (e)
 	{
 		result = false;
-		log.l("Failed to find the " + curName + " layer. Treating " + doc.name + " as a non-converted template.");
+		log.l("Failed to find the layer: " + curName + ". Treating " + doc.name + " as a non-converted template.");
 	}
 
 	return result;

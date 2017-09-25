@@ -10,10 +10,10 @@
 		succes boolean
 
 */
-function makeContainer(doc,layers)
+function makeContainer(doc)
 {
 	var result = true;
-	var layName;
+	var layers = doc.layers,layName;
 
 	/* beautify ignore:start */
 	var w = new Window("dialog", "Enter the Garment Code for " + doc.name);
@@ -46,7 +46,7 @@ function makeContainer(doc,layers)
 		catch (e)
 		{
 			errorList.push("Failed to create a container layer for " + doc.name);
-			log.e("Failed while creating a container layer for " + doc.name);
+			log.e("Failed while creating a container layer for " + doc.name + "::System error message was: " + e);
 			result = false;
 		}
 	}
@@ -67,7 +67,7 @@ function makeContainer(doc,layers)
 		catch (e)
 		{
 			errorList.push("Failed while moving sublayers into container layer.");
-			log.e("Failed while moving sublayers into container layer.");
+			log.e("Failed while moving sublayers into container layer.::System error message was: " + e);
 			result = false;
 		}
 	}
