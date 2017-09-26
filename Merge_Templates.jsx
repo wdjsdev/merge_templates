@@ -85,33 +85,36 @@ function container()
 		}
 	}
 
+	//unlock source document
 	if(valid)
 	{
 		sourceDoc.activate();
 		valid = unlockDoc(sourceDoc);
 	}
 
+	//unlock master document
 	if(valid)
 	{
 		master.activate();
 		valid = unlockDoc(master);
 	}
 
+	//create container layer in source doc
 	if (valid && !isTemplate(sourceDoc))
 	{
 		sourceDoc.activate();
-		//add container to sourceDoc if necessary
 		valid = makeContainer(sourceDoc);
 	}
 
+	// create container layer in master document
 	if (valid && !isTemplate(master))
 	{
 		master.activate();
-		//add container to master file if necessary
 		valid = makeContainer(master);
 		sourceDoc.activate();
 	}
 
+	//get the artboard dimensions from the source document
 	if(valid)
 	{
 		newArtboardBounds = getArtboardBounds(sourceDoc);
@@ -119,6 +122,13 @@ function container()
 		{
 			valid = false;
 		}
+	}
+
+	//check the master file for any layers that match the name of
+	//the first layer in the source document
+	if(valid)
+	{
+		valid = checkLayerNames(sourceDoc,master);
 	}
 
 
