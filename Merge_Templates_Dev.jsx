@@ -19,7 +19,7 @@ function container()
 	}
 	else
 	{
-		logDest.push( new File("/Volumes/Customization/Library/Scripts/Script Resources/Data/.script_logs/merge_templates_log"));
+		logDest.push( new File("/Volumes/Customization/Library/Scripts/Script Resources/Data/.script_logs/merge_templates_log.txt"));
 	}
 
 	log.h("Begin::Merge_Templates version: " + version + "::Executed by: " + user);
