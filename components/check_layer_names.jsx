@@ -35,7 +35,7 @@ function checkLayerNames(sourceDoc,master)
 	if(sourceLayerName !== sourceLayer.name)
 	{
 		log.l("The master file contained a layer that matched the name of the garment layer in the source doc.")
-		log.l("Updated source doc layer name to " + sourceLayerName);
+		log.l("Updated source doc layer name from " + sourceLayer.name + " to " + sourceLayerName);
 		sourceLayer.name = sourceLayerName;
 	}
 

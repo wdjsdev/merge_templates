@@ -12,6 +12,7 @@
 */
 function makeContainer(doc)
 {
+	doc.activate();
 	log.h("makeContainer(" + doc.name + ")");
 	var result = true;
 	var layers = doc.layers,layName;

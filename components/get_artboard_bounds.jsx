@@ -14,9 +14,10 @@
 
 function getArtboardBounds(doc)
 {
+	doc.activate();
 	log.h("getArtboardBounds(" + doc.name + ")");
 	var aB = doc.artboards[0];
 	var rect = aB.artboardRect;
-	log.l("Source document artboard bounds = {w:" + rect[2]-rect[0] + ",h:" + rect[3]-rect[1] + "}");
-	return {"w":rect[2]-rect[0],"h":rect[3]-rect[1]};
+	log.l("Source document artboard bounds = {w:" + Math.abs(rect[2]-rect[0]) + ",h:" + Math.abs(rect[3]-rect[1]) + "}");
+	return {"w":Math.abs(rect[2]-rect[0]),"h":Math.abs(rect[3]-rect[1])};
 }
