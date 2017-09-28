@@ -63,12 +63,14 @@ function makeContainer(doc)
 		{
 			//loop the layers, unlock and unhide them, then move them to the container layer
 			var layLen = layers.length;
+			var layName;
 			for (var x = layLen - 1; x > 0; x--)
 			{
+				layName = layers[x].name;
 				layers[x].locked = false;
 				layers[x].visible = true;
 				layers[x].moveToBeginning(container);
-				log.l("Moved layer: " + layers[x].name + " to container layer.");
+				log.l("Moved layer: " + layName + " to container layer.");
 			}
 			log.l("Successfully moved all layers to container layer.");
 		}
