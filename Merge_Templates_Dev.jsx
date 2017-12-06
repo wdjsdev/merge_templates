@@ -6,12 +6,12 @@ Description: Merge two mockups together while preserving correct
 			layer structure for other scripts	
 */
 
-function container()
+function container(master)
 {
 	var version = 5;
 	var valid = true;
 
-	eval("#include \"/Volumes/Customization/Library/Scripts/Script Resources/Data/Utilities_Container.js\"");
+	eval("#include \"/Volumes/Customization/Library/Scripts/Script Resources/Data/Utilities_Container.jsxbin\"");
 
 	if(user === "will.dowling")
 	{
@@ -58,7 +58,7 @@ function container()
 
 		openDocs = app.documents,
 		docLength = openDocs.length,
-		master, masterLayers, masterArtboards;
+		masterLayers, masterArtboards;
 
 		var abDimensions = {};
 
@@ -70,6 +70,7 @@ function container()
 	/*****************************************************************************/
 	//=================================  Procedure  =================================//
 
+
 	//verify the existence of necessary documents
 	if (valid && docLength < 2)
 	{
@@ -80,7 +81,13 @@ function container()
 
 	if (valid)
 	{
-		master = getMaster(openDocs);
+		//check to see whether a master file has already been determined by
+		//an outside script (for example the build_mockup script which implements
+		//this script). If a master file has already been determined, skip the dialog
+		if(!master)
+		{
+			master = getMaster(openDocs);
+		}
 		if (!master)
 		{
 			valid = false;
@@ -174,4 +181,12 @@ function container()
 	return valid
 
 }
-container();
+
+try
+{
+	container(masterFile);
+}
+catch(e)
+{
+	container(undefined);
+}
