@@ -103,12 +103,14 @@ function container(master)
 	if(valid)
 	{
 		valid = unlockDoc(sourceDoc);
+		removeStrayPoints(sourceDoc);
 	}
 
 	//unlock master document
 	if(valid)
 	{
 		valid = unlockDoc(master);
+		removeStrayPoints(master);
 	}
 
 	//create container layer in source doc
