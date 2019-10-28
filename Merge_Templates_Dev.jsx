@@ -8,21 +8,24 @@ Description: Merge two mockups together while preserving correct
 
 function container(master)
 {
-	var version = 5;
 	var valid = true;
+	var scriptName = "merge_templates";
 
+	//Production Utilities
 	eval("#include \"/Volumes/Customization/Library/Scripts/Script Resources/Data/Utilities_Container.jsxbin\"");
+	eval("#include \"/Volumes/Customization/Library/Scripts/Script Resources/Data/Batch_Framework.jsxbin\"");
+	
+	// //Dev Utilities
+	// eval("#include \"/Volumes/Macintosh HD/Users/will.dowling/Desktop/automation/utilities/Utilities_Container.js\"");
+	// eval("#include \"/Volumes/Macintosh HD/Users/will.dowling/Desktop/automation/utilities/Batch_Framework.js\"");
 
-	if(user === "will.dowling")
+	if(!valid)
 	{
-		logDest.push(new File("~/Desktop/automation/logs/merge_templates_log.txt"));
-	}
-	else
-	{
-		logDest.push( new File("/Volumes/Customization/Library/Scripts/Script Resources/Data/.script_logs/merge_templates_log.txt"));
+		return;
 	}
 
-	log.h("Begin::Merge_Templates version: " + version + "::Executed by: " + user);
+	logDest.push(getLogDest());
+
 
 	/*****************************************************************************/
 	//=================================  Logic  =================================//
