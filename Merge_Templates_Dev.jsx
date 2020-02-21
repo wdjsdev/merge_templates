@@ -33,7 +33,14 @@ function container(master)
 	//import the necessary components
 	var devPath = "~/Desktop/automation/merge_templates/components";
 	var prodPath = "/Volumes/Customization/Library/Scripts/Script Resources/components/merge_templates";
-	var comps = includeComponents(devPath, prodPath);
+	
+	//setting both component paths to the production components path
+	//to prevent dialogs each time i run build mockup. Unless i'm
+	//doing any development on this script, there's no reason to see this
+	//dialog. So if you're here in the future and you need to fix some bugs
+	//just swap the commented and uncommented versions below
+	// var comps = includeComponents(devPath, prodPath);
+	var comps = includeComponents(prodPath, prodPath,true);
 	if (comps)
 	{
 		var compLen = comps.length;
