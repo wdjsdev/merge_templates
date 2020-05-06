@@ -11,13 +11,67 @@ function container(master)
 	var valid = true;
 	var scriptName = "merge_templates";
 
-	//Production Utilities
-	eval("#include \"/Volumes/Customization/Library/Scripts/Script Resources/Data/Utilities_Container.jsxbin\"");
-	eval("#include \"/Volumes/Customization/Library/Scripts/Script Resources/Data/Batch_Framework.jsxbin\"");
-	
-	// //Dev Utilities
-	// eval("#include \"/Volumes/Macintosh HD/Users/will.dowling/Desktop/automation/utilities/Utilities_Container.js\"");
-	// eval("#include \"/Volumes/Macintosh HD/Users/will.dowling/Desktop/automation/utilities/Batch_Framework.js\"");
+	function getUtilities()
+	{
+		var result = [];
+		var networkPath,utilPath,ext,devUtilities;
+
+		//check for dev utilities preference file
+		var devUtilitiesPreferenceFile = File("~/Documents/script_preferences/dev_utilities.txt");
+
+		if(devUtilitiesPreferenceFile.exists)
+		{
+			devUtilitiesPreferenceFile.open("r");
+			var prefContents = devUtilitiesPreferenceFile.read();
+			devUtilitiesPreferenceFile.close();
+
+			devUtilities = prefContents === "true" ? true : false;
+		}
+		else
+		{
+			devUtilities = false;
+		}
+
+		if(devUtilities)
+		{
+			utilPath = "~/Desktop/automation/utilities/";
+			ext = ".js";
+		}
+		else
+		{
+			if($.os.match("Windows"))
+			{
+				networkPath = "//AD4/Customization/";
+			}
+			else
+			{
+				networkPath = "/Volumes/Customization/";
+			}
+
+			utilPath = decodeURI(networkPath + "Library/Scripts/Script Resources/Data/");	
+			ext = ".jsxbin";
+
+		}
+
+		result.push(utilPath + "Utilities_Container" + ext);
+		result.push(utilPath + "Batch_Framework" + ext);
+		return result;
+
+	}
+
+	var utilities = getUtilities();
+	if(utilities)
+	{
+		for(var u=0,len=utilities.length;u<len;u++)
+		{
+			eval("#include \"" + utilities[u] + "\"");	
+		}
+	}
+	else
+	{
+		alert("Failed to find the utilities..");
+		return false;	
+	}
 
 	if(!valid)
 	{
@@ -29,29 +83,28 @@ function container(master)
 
 	/*****************************************************************************/
 	//=================================  Logic  =================================//
-
-	//import the necessary components
-	var devPath = "~/Desktop/automation/merge_templates/components";
-	var prodPath = "/Volumes/Customization/Library/Scripts/Script Resources/components/merge_templates";
 	
-	//setting both component paths to the production components path
-	//to prevent dialogs each time i run build mockup. Unless i'm
-	//doing any development on this script, there's no reason to see this
-	//dialog. So if you're here in the future and you need to fix some bugs
-	//just swap the commented and uncommented versions below
-	// var comps = includeComponents(devPath, prodPath);
-	var comps = includeComponents(prodPath, prodPath,true);
-	if (comps)
+	//get the components
+	var devComponents = desktopPath + "automation/build_mockup/components";
+	var prodComponents = componentsPath + "build_mockup_beta";
+
+	var compFiles = includeComponents(devComponents,prodComponents,false);
+	if(compFiles.length)
 	{
-		var compLen = comps.length;
-		for (var c = 0; c < compLen; c++)
+		var curComponent;
+		for(var cf=0,len=compFiles.length;cf<len;cf++)
 		{
-			eval("#include \"" + comps[c] + "\"");
+			curComponent = compFiles[cf].fullName;
+			eval("#include \"" + curComponent + "\"");
+			log.l("included: " + compFiles[cf].name);
 		}
 	}
 	else
 	{
+		errorList.push("Failed to find the necessary components.");
+		log.e("No components were found.");
 		valid = false;
+		return valid;
 	}
 
 	//=================================  /Logic  =================================//
