@@ -85,8 +85,8 @@ function container(master)
 	//=================================  Logic  =================================//
 	
 	//get the components
-	var devComponents = desktopPath + "automation/build_mockup/components";
-	var prodComponents = componentsPath + "build_mockup_beta";
+	var devComponents = desktopPath + "automation/merge_templates/";
+	var prodComponents = componentsPath + "merge_templates/";
 
 	var compFiles = includeComponents(devComponents,prodComponents,false);
 	if(compFiles.length)
