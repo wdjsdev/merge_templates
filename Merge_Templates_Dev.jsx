@@ -70,7 +70,7 @@ function container(master)
 	var devComponents = desktopPath + "automation/merge_templates/";
 	var prodComponents = componentsPath + "merge_templates/";
 
-	var compFiles = includeComponents(devComponents,prodComponents,false);
+	var compFiles = includeComponents(prodComponents,prodComponents,true);
 	if(compFiles.length)
 	{
 		var curComponent;
