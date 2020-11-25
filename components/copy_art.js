@@ -16,7 +16,7 @@ function copyArt(doc)
 	log.h("copyArt(" + doc.name + ")");
 	var result = true;
 	
-	doc.activate();
+	// doc.activate();
 	try
 	{
 		app.executeMenuCommand("selectall");

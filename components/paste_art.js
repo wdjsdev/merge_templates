@@ -16,7 +16,7 @@ function pasteArt(doc)
 	log.h("pasteArt(" + doc.name + ")");
 	var result = true;
 
-	doc.activate();
+	// doc.activate();
 	try
 	{
 		app.pasteRemembersLayers = true;

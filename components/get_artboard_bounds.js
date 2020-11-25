@@ -14,7 +14,7 @@
 
 function getArtboardBounds(doc)
 {
-	doc.activate();
+	// doc.activate();
 	log.h("getArtboardBounds(" + doc.name + ")");
 	var aB = doc.artboards[0];
 	var rect = aB.artboardRect;

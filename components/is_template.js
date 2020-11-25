@@ -13,10 +13,11 @@
 
 function isTemplate(doc)
 {
-	doc.activate();
+	// doc.activate();
 	log.h("isTemplate(" + doc.name + ")");
 	var result, curLay, curName, subLay;
-	var subLayers = ["Artwork Layer", "Mockup", "Prepress", "Information"],
+	// var subLayers = ["Artwork Layer", "Mockup", "Prepress", "Information"],
+	var subLayers = ["Mockup", "Information"],
 		len = subLayers.length;
 
 	try

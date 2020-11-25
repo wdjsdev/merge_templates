@@ -6,6 +6,7 @@ Description: Merge two mockups together while preserving correct
 			layer structure for other scripts	
 */
 
+#target Illustrator
 function container(master)
 {
 	var valid = true;
@@ -62,12 +63,17 @@ function container(master)
 
 	logDest.push(getLogDest());
 
+	if(user === "will.dowling")
+	{
+		DEV_LOGGING = true;
+	}
+
 
 	/*****************************************************************************/
 	//=================================  Logic  =================================//
 	
 	//get the components
-	var devComponents = desktopPath + "automation/merge_templates/";
+	var devComponents = desktopPath + "automation/merge_templates/components/";
 	var prodComponents = componentsPath + "merge_templates/";
 
 	var compFiles = includeComponents(prodComponents,prodComponents,true);
@@ -131,7 +137,15 @@ function container(master)
 		//this script). If a master file has already been determined, skip the dialog
 		if(!master)
 		{
-			master = getMaster(openDocs);
+			if(docLength === 2)
+			{
+				master = app.documents[1];
+			}
+			else
+			{
+				master = getMaster(openDocs);	
+			}
+			
 		}
 		if (!master)
 		{
@@ -144,30 +158,24 @@ function container(master)
 		}
 	}
 
+	//check the master file for any layers that match the name of
+	//the first layer in the source document
+	if(valid)
+	{
+		app.executeMenuCommand("fitall");
+		valid = checkLayerNames(sourceDoc,master);
+	}
+
+
+	//
+	//initialize the sourceDoc
+	//
+
 	//unlock source document
 	if(valid)
 	{
 		valid = unlockDoc(sourceDoc);
 		removeStrayPoints(sourceDoc);
-	}
-
-	//unlock master document
-	if(valid)
-	{
-		valid = unlockDoc(master);
-		removeStrayPoints(master);
-	}
-
-	//create container layer in source doc
-	if (valid && !isTemplate(sourceDoc))
-	{
-		valid = makeContainer(sourceDoc);
-	}
-
-	// create container layer in master document
-	if (valid && !isTemplate(master))
-	{
-		valid = makeContainer(master);
 	}
 
 	//get the artboard dimensions from the source document
@@ -180,11 +188,45 @@ function container(master)
 		}
 	}
 
-	//check the master file for any layers that match the name of
-	//the first layer in the source document
+	//create container layer in source doc
+	if (valid && !isTemplate(sourceDoc))
+	{
+		valid = makeContainer(sourceDoc);
+	}
+
+
+
+	
+
+	//copy the artwork from the source doc to the clipboard
 	if(valid)
 	{
-		valid = checkLayerNames(sourceDoc,master);
+		valid = copyArt(sourceDoc);
+	}
+
+
+
+
+	//
+	//process the master document
+	//
+
+	master.activate();
+
+	app.executeMenuCommand("fitall");
+
+
+	//unlock master document
+	if(valid)
+	{
+		valid = unlockDoc(master);
+		removeStrayPoints(master);
+	}
+
+	// create container layer in master document
+	if (valid && !isTemplate(master))
+	{
+		valid = makeContainer(master);
 	}
 
 	//create a new artboard in the master file with the same
@@ -194,11 +236,7 @@ function container(master)
 		valid = makeNewArtboard(master,abDimensions);
 	}
 
-	//copy the artwork from the source doc to the clipboard
-	if(valid)
-	{
-		valid = copyArt(sourceDoc);
-	}
+	
 
 	//paste the artwork into the master file
 	if(valid)
@@ -213,6 +251,8 @@ function container(master)
 	}
 
 	app.selection = null;
+
+
 
 
 	//=================================  /Procedure  =================================//

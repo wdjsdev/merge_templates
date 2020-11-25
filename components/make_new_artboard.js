@@ -17,7 +17,7 @@
 //create a new artboard in the master file
 function makeNewArtboard(doc,dim)
 {
-	doc.activate();
+	// doc.activate();
 	log.h("makeNewArtboard(master, {w:" + dim.w + " ,h:" + dim.h + ")");
 	
 	var result = true;
