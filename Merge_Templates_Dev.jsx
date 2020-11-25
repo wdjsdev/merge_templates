@@ -122,6 +122,10 @@ function container(master)
 	//=================================  Procedure  =================================//
 
 
+	//make sure guides are unlocked
+	sourceDoc.selection = null;
+	unlockGuides();
+
 	//verify the existence of necessary documents
 	if (valid && docLength < 2)
 	{
