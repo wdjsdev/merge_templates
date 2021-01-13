@@ -182,6 +182,10 @@ function container(master)
 		removeStrayPoints(sourceDoc);
 	}
 
+	//make sure guides are unlocked
+	app.selection = null;
+	unlockGuides();
+
 	//get the artboard dimensions from the source document
 	if(valid)
 	{
