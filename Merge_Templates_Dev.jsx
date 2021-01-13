@@ -12,6 +12,16 @@ function container(master)
 	var valid = true;
 	var scriptName = "merge_templates";
 
+	//this boolean denotes whether this
+	//script was run independently (standalone = true)
+	//or if it was called from the build mockup script
+	//(standalone = false);
+	//if it was called from build mockup, i don't want 
+	//to write the log file for this script
+	//because it will be written at the end of the 
+	//build mockup script. 
+	var standalone = master ? false:true;
+
 	function getUtilities()
 	{
 		var result = [];
@@ -122,9 +132,7 @@ function container(master)
 	//=================================  Procedure  =================================//
 
 
-	//make sure guides are unlocked
-	sourceDoc.selection = null;
-	unlockGuides();
+	
 
 	//verify the existence of necessary documents
 	if (valid && docLength < 2)
@@ -252,13 +260,27 @@ function container(master)
 		valid = pasteArt(master);
 	}
 
+	app.selection = null;
+
 	//fix up the master file layers
 	if(valid)
 	{
 		valid = properTemplateSetup(master);
 	}
 
-	app.selection = null;
+	// app.selection = null;
+
+	// var curName;
+	// for(var x=0;x<app.activeDocument.layers.length;x++)
+	// {
+	// 	curName = app.activeDocument.layers[x].name.toLowerCase();
+	// 	if(curName.indexOf("guide")>-1 || curName.indexOf("do not")>-1)
+	// 	{
+	// 		continue;
+	// 	}
+	// 	layers[x].locked = false;
+	// 	layers[x].visible = true;
+	// }
 
 
 
@@ -266,12 +288,16 @@ function container(master)
 	//=================================  /Procedure  =================================//
 	/*****************************************************************************/
 
-	if (errorList.length > 0)
-	{
-		sendErrors(errorList);
-	}
+	
 
-	printLog();
+	if(standalone)
+	{
+		if (errorList.length > 0)
+		{
+			sendErrors(errorList);
+		}
+		printLog();
+	}
 
 	return valid
 
