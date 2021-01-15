@@ -60,11 +60,15 @@ function container(master)
 
 	}
 
-	var utilities = getUtilities();
-	for(var u=0,len=utilities.length;u<len;u++)
+	if(standalone)
 	{
-		eval("#include \"" + utilities[u] + "\"");	
+		var utilities = getUtilities();
+		for(var u=0,len=utilities.length;u<len;u++)
+		{
+			eval("#include \"" + utilities[u] + "\"");	
+		}	
 	}
+	
 
 	if(!valid)
 	{
@@ -190,9 +194,13 @@ function container(master)
 		removeStrayPoints(sourceDoc);
 	}
 
-	//make sure guides are unlocked
-	app.selection = null;
-	unlockGuides();
+	if(valid)
+	{
+		//make sure guides are unlocked
+		app.selection = null;
+		unlockGuides();	
+	}
+	
 
 	//get the artboard dimensions from the source document
 	if(valid)
@@ -227,9 +235,12 @@ function container(master)
 	//process the master document
 	//
 
-	master.activate();
-
-	app.executeMenuCommand("fitall");
+	if(valid)
+	{
+		master.activate();
+		app.executeMenuCommand("fitall");	
+	}
+	
 
 
 	//unlock master document
