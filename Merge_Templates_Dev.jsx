@@ -67,6 +67,7 @@ function container(master)
 		{
 			eval("#include \"" + utilities[u] + "\"");	
 		}	
+		logDest.push(getLogDest());
 	}
 	
 
@@ -75,7 +76,7 @@ function container(master)
 		return;
 	}
 
-	logDest.push(getLogDest());
+	
 
 	if(user === "will.dowling")
 	{
@@ -313,12 +314,19 @@ function container(master)
 	return valid
 
 }
-
-try
-{
-	container(masterFile);
-}
-catch(e)
+if(typeof masterFile === "undefined")
 {
 	container(undefined);
 }
+else
+{
+	container(masterFile)
+}
+// try
+// {
+// 	container(masterFile);
+// }
+// catch(e)
+// {
+// 	container(undefined);
+// }
