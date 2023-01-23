@@ -12,6 +12,46 @@ function container(master)
 	var valid = true;
 	var scriptName = "merge_templates";
 
+
+
+	function getUtilities ()
+	{
+		var utilNames = [ "Utilities_Container" ]; //array of util names
+		var utilFiles = []; //array of util files
+		//check for dev mode
+		var devUtilitiesPreferenceFile = File( "~/Documents/script_preferences/dev_utilities.txt" );
+		function readDevPref ( dp ) { dp.open( "r" ); var contents = dp.read() || ""; dp.close(); return contents; }
+		if ( devUtilitiesPreferenceFile.exists && readDevPref( devUtilitiesPreferenceFile ).match( /true/i ) )
+		{
+			$.writeln( "///////\n////////\nUsing dev utilities\n///////\n////////" );
+			var devUtilPath = "~/Desktop/automation/utilities/";
+			utilFiles =[ devUtilPath + "Utilities_Container.js", devUtilPath + "Batch_Framework.js" ];
+			return utilFiles;
+		}
+
+		var dataResourcePath = customizationPath + "Library/Scripts/Script_Resources/Data/";
+		
+		for(var u=0;u<utilNames.length;u++)
+		{
+			var utilFile = new File(dataResourcePath + utilNames[u] + ".jsxbin");
+			if(utilFile.exists)
+			{
+				utilFiles.push(utilFile);	
+			}
+			
+		}
+
+		if(!utilFiles.length)
+		{
+			alert("Could not find utilities. Please ensure you're connected to the appropriate Customization drive.");
+			return [];
+		}
+
+		
+		return utilFiles;
+
+	}
+
 	//this boolean denotes whether this
 	//script was run independently (standalone = true)
 	//or if it was called from the build mockup script
@@ -22,46 +62,17 @@ function container(master)
 	//build mockup script. 
 	var standalone = master ? false:true;
 
-	function getUtilities()
-	{
-		var result = [];
-		var utilPath = "/Volumes/Customization/Library/Scripts/Script_Resources/Data/";
-		var ext = ".jsxbin"
-
-		//check for dev utilities preference file
-		var devUtilitiesPreferenceFile = File("~/Documents/script_preferences/dev_utilities.txt");
-
-		if(devUtilitiesPreferenceFile.exists)
-		{
-			devUtilitiesPreferenceFile.open("r");
-			var prefContents = devUtilitiesPreferenceFile.read();
-			devUtilitiesPreferenceFile.close();
-			if(prefContents === "true")
-			{
-				utilPath = "~/Desktop/automation/utilities/";
-				ext = ".js";
-			}
-		}
-
-		if($.os.match("Windows"))
-		{
-			utilPath = utilPath.replace("/Volumes/","//AD4/");
-		}
-
-		result.push(utilPath + "Utilities_Container" + ext);
-		result.push(utilPath + "Batch_Framework" + ext);
-
-		if(!result.length)
-		{
-			valid = false;
-			alert("Failed to find the utilities.");
-		}
-		return result;
-
-	}
-
 	if(standalone)
 	{
+		
+		var utilities = getUtilities();
+
+		for ( var u = 0, len = utilities.length; u < len && valid; u++ )
+		{
+			eval( "#include \"" + utilities[ u ] + "\"" );
+		}
+
+		if ( !valid || !utilities.length) return;
 		var utilities = getUtilities();
 		for(var u=0,len=utilities.length;u<len;u++)
 		{
