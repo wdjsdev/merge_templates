@@ -7,7 +7,7 @@ Description: Merge two mockups together while preserving correct
 */
 
 #target Illustrator
-function container(master)
+function container ( master )
 {
 	var valid = true;
 	var scriptName = "merge_templates";
@@ -25,29 +25,29 @@ function container(master)
 		{
 			$.writeln( "///////\n////////\nUsing dev utilities\n///////\n////////" );
 			var devUtilPath = "~/Desktop/automation/utilities/";
-			utilFiles =[ devUtilPath + "Utilities_Container.js", devUtilPath + "Batch_Framework.js" ];
+			utilFiles = [ devUtilPath + "Utilities_Container.js", devUtilPath + "Batch_Framework.js" ];
 			return utilFiles;
 		}
 
 		var dataResourcePath = customizationPath + "Library/Scripts/Script_Resources/Data/";
-		
-		for(var u=0;u<utilNames.length;u++)
+
+		for ( var u = 0; u < utilNames.length; u++ )
 		{
-			var utilFile = new File(dataResourcePath + utilNames[u] + ".jsxbin");
-			if(utilFile.exists)
+			var utilFile = new File( dataResourcePath + utilNames[ u ] + ".jsxbin" );
+			if ( utilFile.exists )
 			{
-				utilFiles.push(utilFile);	
+				utilFiles.push( utilFile );
 			}
-			
+
 		}
 
-		if(!utilFiles.length)
+		if ( !utilFiles.length )
 		{
-			alert("Could not find utilities. Please ensure you're connected to the appropriate Customization drive.");
+			alert( "Could not find utilities. Please ensure you're connected to the appropriate Customization drive." );
 			return [];
 		}
 
-		
+
 		return utilFiles;
 
 	}
@@ -60,11 +60,11 @@ function container(master)
 	//to write the log file for this script
 	//because it will be written at the end of the 
 	//build mockup script. 
-	var standalone = master ? false:true;
+	var standalone = master ? false : true;
 
-	if(standalone)
+	if ( standalone )
 	{
-		
+
 		var utilities = getUtilities();
 
 		for ( var u = 0, len = utilities.length; u < len && valid; u++ )
@@ -72,24 +72,19 @@ function container(master)
 			eval( "#include \"" + utilities[ u ] + "\"" );
 		}
 
-		if ( !valid || !utilities.length) return;
-		var utilities = getUtilities();
-		for(var u=0,len=utilities.length;u<len;u++)
-		{
-			eval("#include \"" + utilities[u] + "\"");	
-		}	
-		logDest.push(getLogDest());
+		if ( !valid || !utilities.length ) return;
+		logDest.push( getLogDest() );
 	}
-	
 
-	if(!valid)
+
+	if ( !valid )
 	{
 		return;
 	}
 
-	
 
-	if(user === "will.dowling")
+
+	if ( user === "will.dowling" )
 	{
 		DEV_LOGGING = true;
 	}
@@ -97,26 +92,26 @@ function container(master)
 
 	/*****************************************************************************/
 	//=================================  Logic  =================================//
-	
+
 	//get the components
 	var devComponents = desktopPath + "automation/merge_templates/components/";
 	var prodComponents = componentsPath + "merge_templates/";
 
-	var compFiles = includeComponents(prodComponents,prodComponents,true);
-	if(compFiles.length)
+	var compFiles = includeComponents( prodComponents, prodComponents, true );
+	if ( compFiles.length )
 	{
 		var curComponent;
-		for(var cf=0,len=compFiles.length;cf<len;cf++)
+		for ( var cf = 0, len = compFiles.length; cf < len; cf++ )
 		{
-			curComponent = compFiles[cf].fullName;
-			eval("#include \"" + curComponent + "\"");
-			log.l("included: " + compFiles[cf].name);
+			curComponent = compFiles[ cf ].fullName;
+			eval( "#include \"" + curComponent + "\"" );
+			log.l( "included: " + compFiles[ cf ].name );
 		}
 	}
 	else
 	{
-		errorList.push("Failed to find the necessary components.");
-		log.e("No components were found.");
+		errorList.push( "Failed to find the necessary components." );
+		log.e( "No components were found." );
 		valid = false;
 		return valid;
 	}
@@ -137,7 +132,7 @@ function container(master)
 		docLength = openDocs.length,
 		masterLayers, masterArtboards;
 
-		var abDimensions = {};
+	var abDimensions = {};
 
 
 	//=================================  /Data  =================================//
@@ -148,34 +143,34 @@ function container(master)
 	//=================================  Procedure  =================================//
 
 
-	
+
 
 	//verify the existence of necessary documents
-	if (valid && docLength < 2)
+	if ( valid && docLength < 2 )
 	{
-		errorList.push("You must have at least 2 documents open.");
-		log.e("Not enough documents open.::There were: " + app.documents.length + " documents open.");
+		errorList.push( "You must have at least 2 documents open." );
+		log.e( "Not enough documents open.::There were: " + app.documents.length + " documents open." );
 		valid = false;
 	}
 
-	if (valid)
+	if ( valid )
 	{
 		//check to see whether a master file has already been determined by
 		//an outside script (for example the build_mockup script which implements
 		//this script). If a master file has already been determined, skip the dialog
-		if(!master)
+		if ( !master )
 		{
-			if(docLength === 2)
+			if ( docLength === 2 )
 			{
-				master = app.documents[1];
+				master = app.documents[ 1 ];
 			}
 			else
 			{
-				master = getMaster(openDocs);	
+				master = getMaster( openDocs );
 			}
-			
+
 		}
-		if (!master)
+		if ( !master )
 		{
 			valid = false;
 		}
@@ -188,10 +183,10 @@ function container(master)
 
 	//check the master file for any layers that match the name of
 	//the first layer in the source document
-	if(valid)
+	if ( valid )
 	{
-		app.executeMenuCommand("fitall");
-		valid = checkLayerNames(sourceDoc,master);
+		app.executeMenuCommand( "fitall" );
+		valid = checkLayerNames( sourceDoc, master );
 	}
 
 
@@ -200,44 +195,44 @@ function container(master)
 	//
 
 	//unlock source document
-	if(valid)
+	if ( valid )
 	{
-		valid = unlockDoc(sourceDoc);
-		removeStrayPoints(sourceDoc);
+		valid = unlockDoc( sourceDoc );
+		removeStrayPoints( sourceDoc );
 	}
 
-	if(valid)
+	if ( valid )
 	{
 		//make sure guides are unlocked
 		app.selection = null;
-		unlockGuides();	
+		unlockGuides();
 	}
-	
+
 
 	//get the artboard dimensions from the source document
-	if(valid)
+	if ( valid )
 	{
-		abDimensions = getArtboardBounds(sourceDoc);
-		if(!abDimensions)
+		abDimensions = getArtboardBounds( sourceDoc );
+		if ( !abDimensions )
 		{
 			valid = false;
 		}
 	}
 
 	//create container layer in source doc
-	if (valid && !isTemplate(sourceDoc))
+	if ( valid && !isTemplate( sourceDoc ) )
 	{
-		valid = makeContainer(sourceDoc);
+		valid = makeContainer( sourceDoc );
 	}
 
 
 
-	
+
 
 	//copy the artwork from the source doc to the clipboard
-	if(valid)
+	if ( valid )
 	{
-		valid = copyArt(sourceDoc);
+		valid = copyArt( sourceDoc );
 	}
 
 
@@ -247,48 +242,48 @@ function container(master)
 	//process the master document
 	//
 
-	if(valid)
+	if ( valid )
 	{
 		master.activate();
-		app.executeMenuCommand("fitall");	
+		app.executeMenuCommand( "fitall" );
 	}
-	
+
 
 
 	//unlock master document
-	if(valid)
+	if ( valid )
 	{
-		valid = unlockDoc(master);
-		removeStrayPoints(master);
+		valid = unlockDoc( master );
+		removeStrayPoints( master );
 	}
 
 	// create container layer in master document
-	if (valid && !isTemplate(master))
+	if ( valid && !isTemplate( master ) )
 	{
-		valid = makeContainer(master);
+		valid = makeContainer( master );
 	}
 
 	//create a new artboard in the master file with the same
 	//dimensions as the artboard in the sourceDoc
-	if(valid)
+	if ( valid )
 	{
-		valid = makeNewArtboard(master,abDimensions);
+		valid = makeNewArtboard( master, abDimensions );
 	}
 
-	
+
 
 	//paste the artwork into the master file
-	if(valid)
+	if ( valid )
 	{
-		valid = pasteArt(master);
+		valid = pasteArt( master );
 	}
 
 	app.selection = null;
 
 	//fix up the master file layers
-	if(valid)
+	if ( valid )
 	{
-		valid = properTemplateSetup(master);
+		valid = properTemplateSetup( master );
 	}
 
 	// app.selection = null;
@@ -311,13 +306,13 @@ function container(master)
 	//=================================  /Procedure  =================================//
 	/*****************************************************************************/
 
-	
 
-	if(standalone)
+
+	if ( standalone )
 	{
-		if (errorList.length > 0)
+		if ( errorList.length > 0 )
 		{
-			sendErrors(errorList);
+			sendErrors( errorList );
 		}
 		printLog();
 	}
@@ -325,13 +320,13 @@ function container(master)
 	return valid
 
 }
-if(typeof masterFile === "undefined")
+if ( typeof masterFile === "undefined" )
 {
-	container(undefined);
+	container( undefined );
 }
 else
 {
-	container(masterFile)
+	container( masterFile )
 }
 // try
 // {
